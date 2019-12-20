@@ -12,6 +12,8 @@ object Main {
     val input:InputStream = new FileInputStream(new File(dir+"/config.yaml"))
     val output:java.util.LinkedHashMap[String,AnyRef] = yaml.load(input)
 
+    val bot = new EconomyBot(output.get("token").toString)
+
   }
 
 }
