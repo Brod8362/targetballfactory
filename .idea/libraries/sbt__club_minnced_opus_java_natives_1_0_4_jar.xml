@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="sbt: club.minnced:opus-java-natives:1.0.4:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.cache/coursier/v1/https/jcenter.bintray.com/club/minnced/opus-java-natives/1.0.4/opus-java-natives-1.0.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.cache/coursier/v1/https/jcenter.bintray.com/club/minnced/opus-java-natives/1.0.4/opus-java-natives-1.0.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

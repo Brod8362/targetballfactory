@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="sbt: net.dv8tion:JDA:4.0.0_79:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.cache/coursier/v1/https/jcenter.bintray.com/net/dv8tion/JDA/4.0.0_79/JDA-4.0.0_79.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.cache/coursier/v1/https/jcenter.bintray.com/net/dv8tion/JDA/4.0.0_79/JDA-4.0.0_79-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.cache/coursier/v1/https/jcenter.bintray.com/net/dv8tion/JDA/4.0.0_79/JDA-4.0.0_79-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
