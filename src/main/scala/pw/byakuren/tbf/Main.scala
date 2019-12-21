@@ -38,7 +38,7 @@ object Main {
       val iterMean: Int = dict("iter-mean").asInstanceOf[Int]
       val iterOffset: Int = dict("iter-offset").asInstanceOf[Int]
       val baseValue: Double = dict("base-value").asInstanceOf[Double]
-      val lean: Float = dict("jump").asInstanceOf[Double].toFloat
+      val lean: Float = dict("lean").asInstanceOf[Double].toFloat
       val fun: Float = dict("fun").asInstanceOf[Double].toFloat
       val crash: Float = dict("crash").asInstanceOf[Double].toFloat
       val jump: Float = dict("jump").asInstanceOf[Double].toFloat
