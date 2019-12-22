@@ -1,5 +1,7 @@
 package pw.byakuren.tbf.inventory
 
-trait Item {
+import pw.byakuren.tbf.util.SQLWritable
+
+trait Item extends SQLWritable {
 
 }
