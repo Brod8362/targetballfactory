@@ -13,7 +13,6 @@ class MarketsViewCommand(a: Array[StockMarket]) extends Command {
       f"[${i}]${s.name} - ${sign(s.value)}$$${s.value}%.2f"
     }
     m.getChannel.sendMessage(s"```diff\n${str.mkString("\n")}```").queue()
-
   }
 
   private def sign(v: Double): Char = {
