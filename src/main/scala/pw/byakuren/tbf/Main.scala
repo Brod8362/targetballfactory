@@ -22,7 +22,8 @@ object Main {
       case _ => return// something not good
     }
     val markets = parseMarkets(markets_raw)
-    val bot = new EconomyBot(output.get("token").toString, markets)
+    val stockChannel = output.get("stock-alert-channel").asInstanceOf[Long]
+    val bot = new EconomyBot(output.get("token").toString, ".", markets, stockChannel)
 
   }
 
