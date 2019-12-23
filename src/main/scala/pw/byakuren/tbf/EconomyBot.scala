@@ -4,7 +4,7 @@ import net.dv8tion.jda.api.events.ReadyEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.{JDA, JDABuilder}
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import pw.byakuren.tbf.command.{CommandRegistry, MarketsViewCommand}
+import pw.byakuren.tbf.command.{CommandRegistry, MarketsViewCommand, MeCommand, XPCommand}
 import pw.byakuren.tbf.markets.StockMarket
 import pw.byakuren.tbf.util.{Channels, Emoji}
 
@@ -20,6 +20,8 @@ class EconomyBot(token: String, prefix:String, markets: Array[StockMarket], stoc
     println(s"Logged in\nMarkets: ${markets.length}")
 
     registry.register(new MarketsViewCommand(markets))
+    registry.register(new MeCommand())
+    registry.register(new XPCommand())
 
     for (market <- markets) market.setCallbackChannel(channels match { case Some(x) => x.stockChannel })
 //    while (true) {
@@ -37,7 +39,7 @@ class EconomyBot(token: String, prefix:String, markets: Array[StockMarket], stoc
     val split = content.substring(prefix.length).split(" ")
     registry.find(split(0)) match {
       case Some(x) =>
-        new Thread(() => x.run(m)).start()
+        new Thread(() => x.run(m, split.slice(1, split.length))).start()
       case _ =>
         m.addReaction(Emoji.checkmark).queue()
     }

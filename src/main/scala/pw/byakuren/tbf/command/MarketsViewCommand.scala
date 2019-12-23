@@ -6,7 +6,7 @@ class MarketsViewCommand(a: Array[StockMarket]) extends Command {
   override val name: String = "markets"
   override val desc: String = "View stock markets"
 
-  override def run(m: Message): Unit = {
+  override def run(m: Message, args:Array[String]): Unit = {
     var i = 0
     val str = for (s <- a) yield {
       i+=1 // this is necessary because scala is STUPID

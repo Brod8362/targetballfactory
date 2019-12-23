@@ -2,6 +2,8 @@ package pw.byakuren.tbf.user
 
 class Balance(private var bal: Double) {
 
+  def this() { this(0) }
+
   def deposit(amt: Double): Unit = {
     if (amt > 0) bal += amt
   }

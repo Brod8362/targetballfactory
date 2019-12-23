@@ -8,6 +8,6 @@ trait Command {
 
   val desc:String
 
-  def run(m: Message):Unit
+  def run(m: Message, args: Array[String]):Unit
 
 }
