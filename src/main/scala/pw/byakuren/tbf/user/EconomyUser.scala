@@ -5,21 +5,25 @@ import java.awt.Color
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.User
 import pw.byakuren.tbf.actions.Action
-import pw.byakuren.tbf.inventory.Item
+import pw.byakuren.tbf.inventory.{Inventory, Item}
 import pw.byakuren.tbf.util.{Embeds, SQLWritable, Utility}
 
-class EconomyUser(val user: User, var xp: Int, val balance: Balance, var inventory: Array[Item]) extends SQLWritable {
+class EconomyUser(val user: User, var xp: Int, val balance: Balance, var inventory: Inventory) extends SQLWritable {
 
   def this(user: User) {
-    this(user, 0, new Balance(), Array.ofDim[Item](100))
+    this(user, 0, new Balance(), new Inventory())
   }
 
-  final def level:Int = Utility.minimum(0, (xp-10)/5)
+  final def level:Int = {
+    var i = 0
+    while (xp >= totalXpRequired(i+1)) i+=1
+    i
+  }
 
-  final def xpRequired(l: Int): Int = 10 + ((l-1)*5)
+  final def xpRequired(l: Int): Int = 5 + ((l-1)*3)
 
   final def totalXpRequired(l: Int): Int = {
-    if (l < 0) 0
+    if (l < 1) 0
     else xpRequired(l)+totalXpRequired(l-1)
   }
 
