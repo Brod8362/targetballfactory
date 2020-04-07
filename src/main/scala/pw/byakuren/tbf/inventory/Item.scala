@@ -8,5 +8,6 @@ trait Item extends SQLWritable {
   def name: String
   def icon: String
   def value: Double
+  def meta: Int
 
 }

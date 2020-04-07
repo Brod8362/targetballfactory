@@ -10,7 +10,7 @@ object Utility {
   implicit class getEconomyUserFromUser(u: User) {
     def economyUser(): Option[EconomyUser] = {
       //TODO code from DB here
-      EconomyUserTracker.get(u)
+      EconomyUserTracker.apply(u)
     }
   }
 

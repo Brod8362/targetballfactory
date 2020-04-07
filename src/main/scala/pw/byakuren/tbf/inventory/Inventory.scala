@@ -1,12 +1,16 @@
 package pw.byakuren.tbf.inventory
 
-class Inventory(val a: Array[Item]) {
+import pw.byakuren.tbf.util.SQLWritable
+
+class Inventory(val a: Array[Item]) extends SQLWritable {
+
+  private var next = 0
 
   def this() { this(Array.ofDim[Item](100))}
 
   def get(i: Int): Option[Item] = Option(a(i))
 
-  def put(i: Int, item: Item): Unit = a(i)=item
+  def put(item: Item): Unit = a(next)=item; next+=1
 
   def swap(i: Int, i2:Int): Unit = {
     val t = a(i)
@@ -18,4 +22,5 @@ class Inventory(val a: Array[Item]) {
     s"[${a.mkString(",")}]"
   }
 
+  override def write(): Unit = ???
 }

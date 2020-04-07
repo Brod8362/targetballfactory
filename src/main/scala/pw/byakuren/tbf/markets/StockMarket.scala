@@ -4,11 +4,14 @@ import java.awt.Color
 
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.TextChannel
+import net.dv8tion.jda.api.utils.AttachmentOption
+import pw.byakuren.tbf.chart.ChartCreator
 
 class StockMarket(val name: String, maxGrowth: Float, maxDecay: Float, iterMean: Int, iterOffset: Int,
                   baseValue: Double, lean: Float, fun: Float, crash: Float, jump: Float) {
 
   var value = baseValue
+  var previousValues: Seq[Double] = Seq(value)
   private var stockChannel:Option[TextChannel] = None
 
   /*
@@ -39,12 +42,13 @@ class StockMarket(val name: String, maxGrowth: Float, maxDecay: Float, iterMean:
   private def updateValue(newValue: Double): Unit = {
     val prev = value
     value = if (newValue > 0) newValue else 0
+    previousValues=previousValues++Seq(value)
     val eb = new EmbedBuilder().setTitle(s"$name prices ${if (prev < value) "increase4" else "fall"}")
       .setColor(if (prev < value) Color.GREEN else Color.RED)
       .addField("$ Change", f"$$$prev%.2f => $$$value%.2f", true)
       .addField("% Change", f"${((value/prev)-1)*100}%.2f%%", true)
     stockChannel match {
-      case Some(x) => x.sendMessage(eb.build).queue()
+      case Some(x) => x.sendMessage(eb.build).addFile(ChartCreator(this), "chart.png", AttachmentOption.SPOILER).queue()
       case _ =>
     }
   }
@@ -62,13 +66,13 @@ class StockMarket(val name: String, maxGrowth: Float, maxDecay: Float, iterMean:
     }
   }
 
-  def iterate(): Unit = {
+  def iterate(): Long = {
     if (trigger(lean)) {
       grow()
     } else {
       decay()
     }
-    val nextWait = iterMean+((Math.random()*iterOffset*2)-iterOffset)
+    ((iterMean+((Math.random()*iterOffset*2)-iterOffset))*1000).toLong
   }
 
 }
