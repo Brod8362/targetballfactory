@@ -19,4 +19,8 @@ object Embeds {
     new EmbedBuilder().setFooter(u.getName, u.getEffectiveAvatarUrl)
   }
 
+  def insufficientEnergy(u: User, e: Int): MessageEmbed = {
+    footerAuthor(u).setTitle(f"You don't have enough energy to perform this action. Needed:$e").setColor(Color.RED).build()
+  }
+
 }

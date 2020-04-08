@@ -6,13 +6,15 @@ import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.utils.AttachmentOption
 import pw.byakuren.tbf.chart.ChartCreator
+import pw.byakuren.tbf.inventory.StockItem
 
-class StockMarket(val name: String, maxGrowth: Float, maxDecay: Float, iterMean: Int, iterOffset: Int,
+class StockMarket(val name: String, val id: Int, maxGrowth: Float, maxDecay: Float, iterMean: Int, iterOffset: Int,
                   baseValue: Double, lean: Float, fun: Float, crash: Float, jump: Float) {
 
   var value = baseValue
   var previousValues: Seq[Double] = Seq(value)
   private var stockChannel:Option[TextChannel] = None
+  var stockItem: Option[StockItem] = None
 
   /*
   name : string : name of market

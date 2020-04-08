@@ -8,10 +8,10 @@ import pw.byakuren.tbf.actions.Action
 import pw.byakuren.tbf.inventory.{Inventory, Item}
 import pw.byakuren.tbf.util.{Embeds, SQLWritable, Utility}
 
-class EconomyUser(val user: User, var xp: Int, val balance: Balance, var inventory: Inventory) extends SQLWritable {
+class EconomyUser(val user: User, var xp: Int, val balance: Balance, var inventory: Inventory, var energy: Int, var maxEnergy: Int) extends SQLWritable {
 
   def this(user: User) {
-    this(user, 0, new Balance(), new Inventory())
+    this(user, 0, new Balance(), new Inventory(), 10, 10)
   }
 
   final def level:Int = {
@@ -33,10 +33,25 @@ class EconomyUser(val user: User, var xp: Int, val balance: Balance, var invento
       a.context.getChannel.sendMessage(Embeds.insufficientLevel(user, level, a.minimumLevel)).queue()
       return
     }
-    if (a.perform(this)) xp += a.xpYield
+    if (a.energyCost > energy) {
+      a.context.getChannel.sendMessage(Embeds.insufficientEnergy(user, a.energyCost)).queue()
+      return
+    }
+    if (a.perform(this)) {
+      xp += a.xpYield
+      energy-=a.energyCost
+    }
     if (level > plevel) {
       a.context.getChannel.sendMessage(Embeds.levelup(user, plevel, level)).queue()
     }
+  }
+
+  def charge(e: Int): Unit = {
+    energy=(energy+e).min(maxEnergy)
+  }
+
+  def netWorth: Double = {
+    balance.amount+inventory.cumulativeItemValue
   }
 
   override def write(): Unit = ???

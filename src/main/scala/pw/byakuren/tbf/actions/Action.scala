@@ -7,6 +7,8 @@ trait Action {
 
   val xpYield: Int
 
+  val energyCost: Int
+
   def perform(u: EconomyUser): Boolean
 
   def context: Message

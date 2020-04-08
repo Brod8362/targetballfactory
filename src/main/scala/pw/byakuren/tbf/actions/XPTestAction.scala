@@ -6,6 +6,8 @@ class XPTestAction(m: Message, a: Int) extends Action {
 
   override val xpYield: Int = a
 
+  override val energyCost: Int = 0
+
   override def perform(u: EconomyUser): Boolean = true
 
   override def context: Message = m

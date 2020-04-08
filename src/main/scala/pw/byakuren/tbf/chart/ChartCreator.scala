@@ -20,7 +20,7 @@ object ChartCreator {
     val chart = ChartFactory.createXYLineChart(market.name, "Time", "Stock Value", dataset)
     chart.setBackgroundPaint(Color.WHITE)
     chart.setBorderStroke(new BasicStroke(5f))
-    ChartUtils.encodeAsPNG(chart.createBufferedImage(800,800))
+    ChartUtils.encodeAsPNG(chart.createBufferedImage(425,250))
   }
 
 }

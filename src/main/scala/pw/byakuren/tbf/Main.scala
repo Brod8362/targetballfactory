@@ -29,12 +29,14 @@ object Main {
   }
 
   def parseMarkets(markets: mutable.Map[String,AnyRef]): Array[StockMarket] = {
+    var nextMarketId = 0
     for (name <- markets.keys) yield {
       val dict: mutable.Map[String,AnyRef] = markets.get(name) match {
         case map:Some[java.util.LinkedHashMap[String,AnyRef]] => map.value.asScala
         case None => throw new RuntimeException("no markets in configuration")
         case _ => throw new RuntimeException("unknown error parsing StockMarkets") // something not good
       }
+      nextMarketId+=1
       val maxGrowth:Float = dict("max-growth").asInstanceOf[Double].toFloat
       val maxDecay: Float = dict("max-decay").asInstanceOf[Double].toFloat
       val iterMean: Int = dict("iter-mean").asInstanceOf[Int]
@@ -44,8 +46,7 @@ object Main {
       val fun: Float = dict("fun").asInstanceOf[Double].toFloat
       val crash: Float = dict("crash").asInstanceOf[Double].toFloat
       val jump: Float = dict("jump").asInstanceOf[Double].toFloat
-      new StockMarket(name, maxGrowth, maxDecay, iterMean, iterOffset, baseValue, lean, fun, crash,
-        jump)
+      new StockMarket(name, nextMarketId, maxGrowth, maxDecay, iterMean, iterOffset, baseValue, lean, fun, crash, jump)
     }
   }.toArray
 

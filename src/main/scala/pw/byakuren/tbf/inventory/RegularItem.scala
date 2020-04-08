@@ -1,16 +1,15 @@
 package pw.byakuren.tbf.inventory
 
-class RegularItem(id: Int) extends Item {
+class RegularItem(namea: String, icona: String, valuea: Double, metaa: Int) extends Item {
 
-  override def id: Int = ???
 
-  override def name: String = ???
+  override def name: String = namea
 
-  override def icon: String = ???
+  override def icon: String = icona
 
-  override def value: Double = ???
+  override def value: Double = valuea
 
-  override def write(): Unit = ???
+  override def meta: Int = metaa
 
-  override def meta: Int = ???
+  override var id: Int = _
 }

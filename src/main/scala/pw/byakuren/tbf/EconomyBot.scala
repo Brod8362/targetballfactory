@@ -4,7 +4,9 @@ import net.dv8tion.jda.api.events.ReadyEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.{JDA, JDABuilder}
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import pw.byakuren.tbf.command.{CommandRegistry, HelpCommand, MarketsViewCommand, MeCommand, XPCommand}
+import pw.byakuren.tbf.actions.GiveMoneyAction
+import pw.byakuren.tbf.command.{BuyStockCommand, CommandRegistry, DetailedInventoryCommand, HelpCommand, InventoryCommand, MarketsViewCommand, MeCommand, MoneyCommand, XPCommand}
+import pw.byakuren.tbf.inventory.ItemRegistry
 import pw.byakuren.tbf.markets.{StockMarket, StockMarketThreadManager}
 import pw.byakuren.tbf.targetball.TargetBallThread
 import pw.byakuren.tbf.util.{Channels, Emoji}
@@ -20,11 +22,16 @@ class EconomyBot(token: String, prefix:String, markets: Seq[StockMarket], stockC
   override def onReady(event: ReadyEvent): Unit = {
     channels = Some(new Channels(jda, stockChannelId, ballChannelId))
     println(s"Logged in\nMarkets: ${markets.length}")
+    ItemRegistry.generateStockItems(markets)
 
     registry.register(new MarketsViewCommand(markets))
     registry.register(new MeCommand())
     registry.register(new XPCommand())
+    registry.register(new MoneyCommand)
     registry.register(new HelpCommand(registry))
+    registry.register(new BuyStockCommand)
+    registry.register(new InventoryCommand)
+    registry.register(new DetailedInventoryCommand)
 
     channels.foreach(c => markets.foreach(_.setCallbackChannel(c.stockChannel)))
 

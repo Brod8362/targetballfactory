@@ -6,6 +6,6 @@ class HelpCommand(commandRegistry: CommandRegistry) extends Command {
   override val desc: String = "See command help"
 
   override def run(m: Message, args: Array[String]): Unit = {
-    m.getChannel.sendMessage(commandRegistry.all.map(c => f"[${c.name}: ${c.desc}").mkString("```","\n","```")).queue()
+    m.getChannel.sendMessage(commandRegistry.all.map(c => f"[${c.name}]: ${c.desc}").mkString("```","\n","```")).queue()
   }
 }
