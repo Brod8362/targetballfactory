@@ -1,20 +1,27 @@
 package pw.byakuren.tbf
 
+import com.sedmelluq.discord.lavaplayer.player.{AudioLoadResultHandler, DefaultAudioPlayerManager}
+import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
+import com.sedmelluq.discord.lavaplayer.track.{AudioPlaylist, AudioTrack}
+import net.dv8tion.jda.api.entities.VoiceChannel
 import net.dv8tion.jda.api.events.ReadyEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.{JDA, JDABuilder}
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import pw.byakuren.tbf.actions.GiveMoneyAction
+import pw.byakuren.tbf.audio.{AudioPlayerSendHandler, LoopScheduler}
 import pw.byakuren.tbf.command.{BuyStockCommand, ChartCommand, CommandRegistry, DetailedInventoryCommand, HelpCommand, InventoryCommand, MarketsViewCommand, MeCommand, MoneyCommand, SellCommand, XPCommand}
 import pw.byakuren.tbf.inventory.ItemRegistry
 import pw.byakuren.tbf.markets.{StockMarket, StockMarketThreadManager}
 import pw.byakuren.tbf.targetball.TargetBallThread
 import pw.byakuren.tbf.util.{Channels, Emoji}
 
-class EconomyBot(token: String, prefix:String, markets: Seq[StockMarket], stockChannelId: Long, ballChannelId: Long) extends ListenerAdapter {
+class EconomyBot(token: String, prefix: String, markets: Seq[StockMarket], stockChannelId: Long, ballChannelId: Long,
+                 loopChannelId: Long, loopSong: String) extends ListenerAdapter {
 
-  val jda:JDA = new JDABuilder(token).addEventListeners(this).build()
-  val registry:CommandRegistry = new CommandRegistry()
+  val jda: JDA = new JDABuilder(token).addEventListeners(this).build()
+  val registry: CommandRegistry = new CommandRegistry()
   val marketManager = new StockMarketThreadManager
 
   var channels: Option[Channels] = None
@@ -41,19 +48,18 @@ class EconomyBot(token: String, prefix:String, markets: Seq[StockMarket], stockC
     TargetBallThread.start()
     marketManager.start(markets)
 
-
-//    while (true) {
-//      for (market <- markets) {
-//        market.iterate()
-//        Thread.sleep(5000L)
-//      }
-//    }
+    Option(jda.getVoiceChannelById(loopChannelId)) match {
+      case Some(loopChannel) =>
+        initAudioLoop(jda, loopChannel, loopSong)
+      case None =>
+        println("can't find loop voice channel")
+    }
   }
 
   override def onMessageReceived(event: MessageReceivedEvent): Unit = {
     val m = event.getMessage
     val content = m.getContentRaw
-    if (m.getAuthor.isBot || content.substring(0, prefix.length)!=prefix) return
+    if (m.getAuthor.isBot || content.substring(0, prefix.length) != prefix) return
     val split = content.substring(prefix.length).split(" ")
     registry.find(split(0)) match {
       case Some(x) =>
@@ -61,5 +67,28 @@ class EconomyBot(token: String, prefix:String, markets: Seq[StockMarket], stockC
       case _ =>
         m.addReaction(Emoji.checkmark).queue()
     }
+  }
+
+  def initAudioLoop(jda: JDA, channel: VoiceChannel, loopURL: String): Unit = {
+    val apm = new DefaultAudioPlayerManager
+    AudioSourceManagers.registerRemoteSources(apm)
+    val player = apm.createPlayer()
+    player.addListener(new LoopScheduler)
+    val am = channel.getGuild.getAudioManager
+    am.openAudioConnection(channel)
+    am.setSendingHandler(new AudioPlayerSendHandler(player))
+    apm.loadItem(loopURL, new AudioLoadResultHandler {
+      override def trackLoaded(track: AudioTrack): Unit = {
+        println("loaded track")
+        player.startTrack(track, false)
+      }
+      override def playlistLoaded(playlist: AudioPlaylist): Unit = ???
+      override def noMatches(): Unit = {
+        println(s"failed to load $loopURL: no matches")
+      }
+      override def loadFailed(exception: FriendlyException): Unit = {
+        println(s"failed to load $loopURL: $exception")
+      }
+    })
   }
 }

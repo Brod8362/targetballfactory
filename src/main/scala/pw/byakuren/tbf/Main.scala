@@ -24,7 +24,9 @@ object Main {
     val markets = parseMarkets(markets_raw)
     val stockChannel = output.get("stock-alert-channel").asInstanceOf[Long]
     val ballChannel = output.get("ball-alert-channel").asInstanceOf[Long]
-    val bot = new EconomyBot(output.get("token").toString, ".", markets, stockChannel, ballChannel)
+    val loopChannel = output.get("voice-loop-channel").asInstanceOf[Long]
+    val loopURL = output.get("loop-url").asInstanceOf[String]
+    val bot = new EconomyBot(output.get("token").toString, ".", markets, stockChannel, ballChannel, loopChannel, loopURL)
 
   }
 
