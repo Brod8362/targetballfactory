@@ -20,7 +20,11 @@ object Embeds {
   }
 
   def insufficientEnergy(u: User, e: Int): MessageEmbed = {
-    footerAuthor(u).setTitle(f"You don't have enough energy to perform this action. Needed:$e").setColor(Color.RED).build()
+    footerAuthor(u).setTitle(f"You don't have enough energy to perform this action. Needed: $e").setColor(Color.RED).build()
+  }
+
+  def ballsMade(u: User, balls: String, wittyQuote: String): MessageEmbed = {
+    footerAuthor(u).setTitle(f"$wittyQuote").setDescription(balls).setColor(Color.CYAN).build()
   }
 
 }

@@ -43,14 +43,14 @@ class StockMarket(val name: String, val id: Int, maxGrowth: Float, maxDecay: Flo
 
   private def updateValue(newValue: Double): Unit = {
     val prev = value
-    value = if (newValue > 0) newValue else 0
+    value = newValue max 0
     previousValues=previousValues++Seq(value)
-    val eb = new EmbedBuilder().setTitle(s"$name prices ${if (prev < value) "increase4" else "fall"}")
+    val eb = new EmbedBuilder().setTitle(s"$name prices ${if (prev < value) "increase" else "fall"}")
       .setColor(if (prev < value) Color.GREEN else Color.RED)
       .addField("$ Change", f"$$$prev%.2f => $$$value%.2f", true)
       .addField("% Change", f"${((value/prev)-1)*100}%.2f%%", true)
     stockChannel match {
-      case Some(x) => x.sendMessage(eb.build).addFile(ChartCreator(this), "chart.png", AttachmentOption.SPOILER).queue()
+      case Some(x) => x.sendMessage(eb.build).addFile(ChartCreator(this), "chart.png").queue()
       case _ =>
     }
   }

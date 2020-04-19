@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.{JDA, JDABuilder}
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import pw.byakuren.tbf.actions.GiveMoneyAction
-import pw.byakuren.tbf.command.{BuyStockCommand, CommandRegistry, DetailedInventoryCommand, HelpCommand, InventoryCommand, MarketsViewCommand, MeCommand, MoneyCommand, XPCommand}
+import pw.byakuren.tbf.command.{BuyStockCommand, ChartCommand, CommandRegistry, DetailedInventoryCommand, HelpCommand, InventoryCommand, MarketsViewCommand, MeCommand, MoneyCommand, SellCommand, XPCommand}
 import pw.byakuren.tbf.inventory.ItemRegistry
 import pw.byakuren.tbf.markets.{StockMarket, StockMarketThreadManager}
 import pw.byakuren.tbf.targetball.TargetBallThread
@@ -32,9 +32,12 @@ class EconomyBot(token: String, prefix:String, markets: Seq[StockMarket], stockC
     registry.register(new BuyStockCommand)
     registry.register(new InventoryCommand)
     registry.register(new DetailedInventoryCommand)
+    registry.register(new SellCommand)
+    registry.register(new ChartCommand(markets))
 
     channels.foreach(c => markets.foreach(_.setCallbackChannel(c.stockChannel)))
 
+    TargetBallThread.channels = channels
     TargetBallThread.start()
     marketManager.start(markets)
 

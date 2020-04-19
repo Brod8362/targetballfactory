@@ -39,7 +39,7 @@ class EconomyUser(val user: User, var xp: Int, val balance: Balance, var invento
     }
     if (a.perform(this)) {
       xp += a.xpYield
-      energy-=a.energyCost
+      charge(-1*a.energyCost)
     }
     if (level > plevel) {
       a.context.getChannel.sendMessage(Embeds.levelup(user, plevel, level)).queue()
