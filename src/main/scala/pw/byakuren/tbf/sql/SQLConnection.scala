@@ -14,7 +14,7 @@ class SQLConnection {
 
   sql"CREATE TABLE IF NOT EXISTS market_values(market INT NOT NULL, value REAL NOT NULL)".execute().apply()
   sql"""CREATE TABLE IF NOT EXISTS inventory(user INT NOT NULL, pos INT NOT NULL, id INT NOT NULL)""".execute().apply()
-  sql"""CREATE TABLE IF NOT EXISTS users(id INT NOT NULL, xp INT NOT NULL, money REAL NOT NULL, energy INT NOT NULL, max_energy INT NOT NULL)""".execute().apply()
+  sql"""CREATE TABLE IF NOT EXISTS users(id INT NOT NULL PRIMARY KEY, xp INT NOT NULL, money REAL NOT NULL, energy INT NOT NULL, max_energy INT NOT NULL)""".execute().apply()
 
   def writeMarketValue(market: StockMarket): Unit = {
     sql"INSERT INTO market_values (market, value) VALUES (${market.id}, ${market.value})".execute().apply()
@@ -63,7 +63,7 @@ class SQLConnection {
   }
 
   def writeUserInfo(eu: EconomyUser): Unit = {
-    sql"INSERT OR REPLACE INTO users VALUES (${eu.user.getIdLong}, ${eu.xp}, ${eu.balance.amount}, ${eu.energy}, ${eu.maxEnergy})".executeUpdate().apply()
+    sql"INSERT OR REPLACE INTO users VALUES (${eu.user.getIdLong}, ${eu.xp}, ${eu.balance.amount}, ${eu.energy}, ${eu.maxEnergy})".execute().apply()
   }
 
   def loadUser(user: User): Option[EconomyUser] = {
