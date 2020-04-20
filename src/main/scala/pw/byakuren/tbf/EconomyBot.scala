@@ -11,10 +11,12 @@ import net.dv8tion.jda.api.{JDA, JDABuilder}
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import pw.byakuren.tbf.actions.GiveMoneyAction
 import pw.byakuren.tbf.audio.{AudioPlayerSendHandler, LoopScheduler}
-import pw.byakuren.tbf.command.{BuyStockCommand, ChartCommand, CommandRegistry, DetailedInventoryCommand, HelpCommand, InventoryCommand, MarketsViewCommand, MeCommand, MoneyCommand, SellCommand, XPCommand}
+import pw.byakuren.tbf.command.{BuyStockCommand, ChartCommand, CommandRegistry, DetailedInventoryCommand, HelpCommand, InventoryCommand, MarketsViewCommand, MeCommand, MoneyCommand, SellCommand, StopCommand, XPCommand}
 import pw.byakuren.tbf.inventory.ItemRegistry
 import pw.byakuren.tbf.markets.{StockMarket, StockMarketThreadManager}
+import pw.byakuren.tbf.sql.SQLConnection
 import pw.byakuren.tbf.targetball.TargetBallThread
+import pw.byakuren.tbf.tracking.EconomyUserTracker
 import pw.byakuren.tbf.util.{Channels, Emoji}
 
 class EconomyBot(token: String, prefix: String, markets: Seq[StockMarket], stockChannelId: Long, ballChannelId: Long,
@@ -41,9 +43,11 @@ class EconomyBot(token: String, prefix: String, markets: Seq[StockMarket], stock
     registry.register(new DetailedInventoryCommand)
     registry.register(new SellCommand)
     registry.register(new ChartCommand(markets))
+    registry.register(new StopCommand)
 
     channels.foreach(c => markets.foreach(_.setCallbackChannel(c.stockChannel)))
 
+    TargetBallThread.create()
     TargetBallThread.channels = channels
     TargetBallThread.start()
     marketManager.start(markets)
@@ -54,6 +58,11 @@ class EconomyBot(token: String, prefix: String, markets: Seq[StockMarket], stock
       case None =>
         println("can't find loop voice channel")
     }
+
+    new Thread(() => {
+      Thread.sleep(60000*5) //sleep 5 min
+      EconomyUserTracker.write()
+    }).start()
   }
 
   override def onMessageReceived(event: MessageReceivedEvent): Unit = {

@@ -2,9 +2,10 @@ package pw.byakuren.tbf.command
 
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Message
+import pw.byakuren.tbf.sql.SQLConnection
 import pw.byakuren.tbf.util.Utility._
 
-class MeCommand extends Command {
+class MeCommand(implicit sql: SQLConnection) extends Command {
   override val name: String = "me"
   override val desc: String = "View information about yourself"
 

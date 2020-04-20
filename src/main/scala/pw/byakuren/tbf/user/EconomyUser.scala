@@ -1,12 +1,10 @@
 package pw.byakuren.tbf.user
 
-import java.awt.Color
-
-import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.User
 import pw.byakuren.tbf.actions.Action
-import pw.byakuren.tbf.inventory.{Inventory, Item}
-import pw.byakuren.tbf.util.{Embeds, SQLWritable, Utility}
+import pw.byakuren.tbf.inventory.Inventory
+import pw.byakuren.tbf.sql.{SQLConnection, SQLWritable}
+import pw.byakuren.tbf.util.Embeds
 
 class EconomyUser(val user: User, var xp: Int, val balance: Balance, var inventory: Inventory, var energy: Int, var maxEnergy: Int) extends SQLWritable {
 
@@ -54,6 +52,8 @@ class EconomyUser(val user: User, var xp: Int, val balance: Balance, var invento
     balance.amount+inventory.cumulativeItemValue
   }
 
-  override def write(): Unit = ???
+  override def write()(implicit sql: SQLConnection): Unit = {
+    sql.writeUser(this)
+  }
 
 }

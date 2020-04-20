@@ -1,10 +1,8 @@
 package pw.byakuren.tbf.inventory
 
-import pw.byakuren.tbf.util.SQLWritable
+class Inventory(val a: Array[Item]) {
 
-class Inventory(val a: Array[Item]) extends SQLWritable {
-
-  def this() { this(Array.ofDim[Item](30))}
+  def this() { this(Array.ofDim[Item](Inventory.InventorySize))}
 
   def get(i: Int): Option[Item] = Option(a(i))
 
@@ -35,5 +33,9 @@ class Inventory(val a: Array[Item]) extends SQLWritable {
     nonNullItems.map(_.icon).mkString("Inventory: ", ",", "")
   }
 
-  override def write(): Unit = ???
+  def raw: Array[Item] = a
+}
+
+object Inventory {
+  val InventorySize: Int = 30
 }

@@ -1,8 +1,9 @@
 package pw.byakuren.tbf.command
 import net.dv8tion.jda.api.entities.Message
+import pw.byakuren.tbf.sql.SQLConnection
 import pw.byakuren.tbf.tracking.EconomyUserTracker
 
-class InventoryCommand extends Command {
+class InventoryCommand(implicit sql: SQLConnection) extends Command {
   override val name: String = "inv"
   override val desc: String = "view your inventory"
 

@@ -4,6 +4,7 @@ import java.io.{File, FileInputStream, InputStream}
 
 import org.yaml.snakeyaml.Yaml
 import pw.byakuren.tbf.markets.StockMarket
+import pw.byakuren.tbf.sql.SQLConnection
 
 import scala.jdk.CollectionConverters._
 import scala.collection.mutable

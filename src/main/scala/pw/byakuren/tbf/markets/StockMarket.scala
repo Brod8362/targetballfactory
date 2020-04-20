@@ -4,14 +4,13 @@ import java.awt.Color
 
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.TextChannel
-import pw.byakuren.tbf.SQLConnection
 import pw.byakuren.tbf.chart.ChartCreator
 import pw.byakuren.tbf.inventory.StockItem
-import pw.byakuren.tbf.util.SQLWritable
+import pw.byakuren.tbf.sql.{SQLConnection, SQLWritable}
 
 class StockMarket(val name: String, val id: Int, maxGrowth: Float, maxDecay: Float, iterMean: Int, iterOffset: Int,
                   baseValue: Double, lean: Float, fun: Float, crash: Float, jump: Float)
-                 (implicit sql: SQLConnection) extends SQLWritable {
+                 (implicit sql: SQLConnection) {
 
   var value: Double = baseValue
   var previousValues: Seq[Double] = Seq(value)
@@ -34,7 +33,7 @@ class StockMarket(val name: String, val id: Int, maxGrowth: Float, maxDecay: Flo
   def setCallbackChannel(channel: TextChannel): Unit = stockChannel = Some(channel)
 
   def restoreValues(previous: Seq[Double]): Unit = {
-    this.value =previous.last
+    this.value = previous.last
     this.previousValues = previous
   }
 
@@ -85,9 +84,5 @@ class StockMarket(val name: String, val id: Int, maxGrowth: Float, maxDecay: Flo
 
   def writeIncrementalValue(implicit sql: SQLConnection): Unit = {
     sql.writeMarketValue(this)
-  }
-
-  override def write(): Unit = {
-
   }
 }

@@ -2,12 +2,13 @@ package pw.byakuren.tbf.targetball
 
 import net.dv8tion.jda.api.entities.{Member, TextChannel}
 import pw.byakuren.tbf.actions.BallsMadeAction
+import pw.byakuren.tbf.sql.SQLConnection
 import pw.byakuren.tbf.tracking.EconomyUserTracker
 import pw.byakuren.tbf.util.{Channels, Embeds}
 
 import scala.jdk.CollectionConverters._
 
-sealed class TargetBallThread extends Runnable {
+sealed class TargetBallThread(implicit SQLConnection: SQLConnection) extends Runnable {
 
   final val MinimumEnergy = 0
   var MaximumEnergy = 100
@@ -60,7 +61,7 @@ sealed class TargetBallThread extends Runnable {
 
 object TargetBallThread {
 
-  val runnable = new TargetBallThread
+  var runnable: TargetBallThread = null
   var channels: Option[Channels] = None //this must be set before the thread starts for it to work properly
   var thread: Option[Thread] = None
 
@@ -71,6 +72,10 @@ object TargetBallThread {
 
   def stop(): Unit = {
     thread.foreach(_.stop())
+  }
+
+  def create()(implicit SQLConnection: SQLConnection): Unit = {
+    runnable = new TargetBallThread
   }
 
 }

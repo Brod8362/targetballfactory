@@ -1,10 +1,11 @@
 package pw.byakuren.tbf.command
 import net.dv8tion.jda.api.entities.Message
 import pw.byakuren.tbf.actions.XPTestAction
+import pw.byakuren.tbf.sql.SQLConnection
 import pw.byakuren.tbf.util.Emoji
 import pw.byakuren.tbf.util.Utility._
 
-class XPCommand extends Command {
+class XPCommand(implicit sql: SQLConnection) extends Command {
   override val name: String = "xp"
   override val desc: String = "give xp"
 

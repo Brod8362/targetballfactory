@@ -2,10 +2,11 @@ package pw.byakuren.tbf.command
 
 import net.dv8tion.jda.api.entities.Message
 import pw.byakuren.tbf.actions.{GiveMoneyAction, XPTestAction}
+import pw.byakuren.tbf.sql.SQLConnection
 import pw.byakuren.tbf.util.Emoji
 import pw.byakuren.tbf.util.Utility._
 
-class MoneyCommand extends Command {
+class MoneyCommand(implicit sql: SQLConnection) extends Command {
   override val name: String = "money"
   override val desc: String = "give money"
 
