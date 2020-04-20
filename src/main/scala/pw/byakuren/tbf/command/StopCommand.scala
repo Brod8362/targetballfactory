@@ -13,7 +13,6 @@ class StopCommand(implicit sql: SQLConnection) extends Command {
     if (m.getMember.hasPermission(Permission.ADMINISTRATOR)) {
       m.getChannel.sendMessage("bye").complete()
       EconomyUserTracker.write()
-      Thread.sleep(10000)
       System.exit(0)
     }
   }
