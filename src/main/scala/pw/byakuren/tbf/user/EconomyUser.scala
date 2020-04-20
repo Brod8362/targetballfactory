@@ -25,6 +25,14 @@ class EconomyUser(val user: User, var xp: Int, val balance: Balance, var invento
     else xpRequired(l)+totalXpRequired(l-1)
   }
 
+  final def relativeXp: Int = {
+    xp-totalXpRequired(level)
+  }
+
+  final def relativeXpNext: Int = {
+    totalXpRequired(level+1)-totalXpRequired(level)
+  }
+
   def perform(a: Action) {
     val plevel = level
     if (a.minimumLevel>level) {

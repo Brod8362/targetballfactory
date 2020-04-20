@@ -6,6 +6,14 @@ class Inventory(val a: Array[Item]) {
 
   def get(i: Int): Option[Item] = Option(a(i))
 
+  def apply(i: Int): Option[Item] = get(i)
+
+  def remove(i: Int): Item = {
+    val it = a(i)
+    a(i) = null
+    it
+  }
+
   def put(item: Item): Unit = a(firstEmptySlot)=item
 
   def swap(i: Int, i2:Int): Unit = {

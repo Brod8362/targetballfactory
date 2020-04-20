@@ -23,7 +23,6 @@ class UserRequestHandler(jda: JDA)(implicit sql: SQLConnection) extends HttpHand
     }).toSeq.toMap
     val id = parameters("id")
     val html = generateHtml(id)
-    println(html)
     val resp = html match {
       case Some(data) =>
         (data, 200)
@@ -60,13 +59,17 @@ class UserRequestHandler(jda: JDA)(implicit sql: SQLConnection) extends HttpHand
   private def userInfo(eu: EconomyUser): Map[String, String] = {
     Map(
       "{{user}}" -> eu.user.getName,
+      "{{avatar}}" -> eu.user.getAvatarUrl,
       "{{money}}" -> String.format("%.2f", eu.balance.amount),
       "{{networth}}" -> String.format("%.2f", eu.netWorth),
       "{{level}}" -> eu.level.toString,
-      "{{xp}}" -> eu.xp.toString,
-      "{{xp_next}}" -> eu.totalXpRequired(eu.level + 1).toString,
+      "{{xp}}" -> eu.relativeXp.toString,
+      "{{xp_next}}" -> eu.relativeXpNext.toString,
       "{{energy}}" -> eu.energy.toString,
-      "{{max_energy}}" -> eu.maxEnergy.toString
+      "{{max_energy}}" -> eu.maxEnergy.toString,
+      "{{total_xp}}" -> eu.xp.toString,
+      "{{xp_percentage}}" -> String.format("%.0f%%", (eu.relativeXp.asInstanceOf[Double]/eu.relativeXpNext)*100),
+      "{{energy_percentage}}" -> String.format("%.0f%%", (eu.energy.asInstanceOf[Double]/eu.maxEnergy)*100)
     )
   }
 }

@@ -1,0 +1,75 @@
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
+.bar_container {
+  width: 100%;
+  background-color: #ddd;
+}
+
+.bar {
+  text-align: right;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color: white;
+  text-shadow: 2px 2px black;
+  font-size:1.2rem;
+}
+
+.xp_bar {
+  background-color: cornflowerblue;
+}
+
+.energy_bar {
+  background-color: #ff7800;
+}
+
+.xp {
+  color: lightgreen;
+  text-align: center;
+}
+
+.user_info {
+  margin: auto;
+  width: 33%;
+  outline: dotted;
+  box-shadow: 10px 10px 5px grey;
+}
+
+.avatar {
+  margin: auto;
+  width: 75%;
+}
+
+.level {
+  text-align: center;
+}
+.networth {
+  text-align: center;
+}
+
+.money_header {
+  font-size:1.25rem;
+  color: green;
+  text-shadow: 1px 1px black;
+  margin-top:0.1rem;
+  margin-bottom:0px;
+}
+
+.money {
+  color: green;
+  text-shadow: 1px 1px black;
+  font-size: 1.75rem;
+  margin-top:0px;
+  margin-bottom:0.5rem;
+}
+
+.user {
+  text-align: center;
+  text-size: 1.4rem;
+}
+
+.level {
+  text-align:center;
+  text-size:1.4rem;
+}

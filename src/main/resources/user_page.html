@@ -1,16 +1,36 @@
 <head>
     <link rel="stylesheet" href="res/user_page.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
 </head>
 
 <!--
-{{user}} : The user's name
-{{money}} : The user's money, rounded to 2 decimal places
-{{networth}} : The user's net worth
-{{level}} : The user's level
-{{xp}} : The user's xp
-{{xp_next}} : XP needed for next level
+{{user}} : discord username
+{{avatar}} : discord avatar url
+{{money}} : money
+{{networth}} : net worth
+{{level}} : current level
+{{xp}} : current xp towards next level
+{{xp_next}} : xp for next level
+{{energy}} : available energy
+{{max_energy}} : max energy
 -->
 
 <body>
+<div class="user_info">
     <p class="user">{{user}}</p>
+    <img class="avatar" src="{{avatar}}">
+    <p class="level">Level {{level}}</p>
+    <div class="bar_container">
+        <div class="bar xp_bar" style="width:{{xp_percentage}};">{{xp}}/{{xp_next}} XP</div>
+    </div>
+    <div class="bar_container">
+        <div class="bar energy_bar" style="width:{{energy_percentage}};">{{energy}} Energy</div>
+    </div>
+    <p class="money_header">Cash</p>
+    <p class="money">${{money}}</p>
+    <p class="money_header">Net Worth</p>
+    <p class="money">${{networth}}</p>
+
+</div>
+
 </body>
