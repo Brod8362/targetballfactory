@@ -3,6 +3,7 @@ package pw.byakuren.tbf
 import java.io.{File, FileInputStream, InputStream}
 
 import org.yaml.snakeyaml.Yaml
+import pw.byakuren.tbf.http.HttpThread
 import pw.byakuren.tbf.markets.StockMarket
 import pw.byakuren.tbf.sql.SQLConnection
 
@@ -29,7 +30,7 @@ object Main {
     val loopChannel = output.get("voice-loop-channel").asInstanceOf[Long]
     val loopURL = output.get("loop-url").asInstanceOf[String]
     val bot = new EconomyBot(output.get("token").toString, ".", markets, stockChannel, ballChannel, loopChannel, loopURL)
-
+    val httpServer = new HttpThread(bot.jda)
   }
 
   def parseMarkets(markets: mutable.Map[String,AnyRef])(implicit SQLConnection: SQLConnection): Array[StockMarket] = {
