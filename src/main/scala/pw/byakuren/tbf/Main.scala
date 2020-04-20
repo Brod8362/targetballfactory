@@ -15,6 +15,7 @@ object Main {
     val dir = System.getProperty("user.dir")
     val input:InputStream = new FileInputStream(new File(dir+"/config.yaml"))
     val output:java.util.LinkedHashMap[String,AnyRef] = yaml.load(input)
+    implicit val sql: SQLConnection = new SQLConnection()
 
     val markets_raw: mutable.Map[String,AnyRef] = output.get("markets") match {
       case map: java.util.Map[String,AnyRef] => map.asScala
@@ -30,7 +31,7 @@ object Main {
 
   }
 
-  def parseMarkets(markets: mutable.Map[String,AnyRef]): Array[StockMarket] = {
+  def parseMarkets(markets: mutable.Map[String,AnyRef])(implicit SQLConnection: SQLConnection): Array[StockMarket] = {
     var nextMarketId = 0
     for (name <- markets.keys) yield {
       val dict: mutable.Map[String,AnyRef] = markets.get(name) match {
@@ -48,7 +49,11 @@ object Main {
       val fun: Float = dict("fun").asInstanceOf[Double].toFloat
       val crash: Float = dict("crash").asInstanceOf[Double].toFloat
       val jump: Float = dict("jump").asInstanceOf[Double].toFloat
-      new StockMarket(name, nextMarketId, maxGrowth, maxDecay, iterMean, iterOffset, baseValue, lean, fun, crash, jump)
+      val sm = new StockMarket(name, nextMarketId, maxGrowth, maxDecay, iterMean, iterOffset, baseValue, lean, fun, crash, jump)
+      val pv = SQLConnection.getValuesForMarket(sm)
+      if (pv.nonEmpty)
+        sm.restoreValues(pv)
+      sm
     }
   }.toArray
 

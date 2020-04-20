@@ -18,7 +18,7 @@ import pw.byakuren.tbf.targetball.TargetBallThread
 import pw.byakuren.tbf.util.{Channels, Emoji}
 
 class EconomyBot(token: String, prefix: String, markets: Seq[StockMarket], stockChannelId: Long, ballChannelId: Long,
-                 loopChannelId: Long, loopSong: String) extends ListenerAdapter {
+                 loopChannelId: Long, loopSong: String)(implicit sql: SQLConnection) extends ListenerAdapter {
 
   val jda: JDA = new JDABuilder(token).addEventListeners(this).build()
   val registry: CommandRegistry = new CommandRegistry()

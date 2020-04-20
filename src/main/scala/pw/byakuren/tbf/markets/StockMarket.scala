@@ -4,14 +4,16 @@ import java.awt.Color
 
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.TextChannel
-import net.dv8tion.jda.api.utils.AttachmentOption
+import pw.byakuren.tbf.SQLConnection
 import pw.byakuren.tbf.chart.ChartCreator
 import pw.byakuren.tbf.inventory.StockItem
+import pw.byakuren.tbf.util.SQLWritable
 
 class StockMarket(val name: String, val id: Int, maxGrowth: Float, maxDecay: Float, iterMean: Int, iterOffset: Int,
-                  baseValue: Double, lean: Float, fun: Float, crash: Float, jump: Float) {
+                  baseValue: Double, lean: Float, fun: Float, crash: Float, jump: Float)
+                 (implicit sql: SQLConnection) extends SQLWritable {
 
-  var value = baseValue
+  var value: Double = baseValue
   var previousValues: Seq[Double] = Seq(value)
   private var stockChannel:Option[TextChannel] = None
   var stockItem: Option[StockItem] = None
@@ -31,7 +33,10 @@ class StockMarket(val name: String, val id: Int, maxGrowth: Float, maxDecay: Flo
 
   def setCallbackChannel(channel: TextChannel): Unit = stockChannel = Some(channel)
 
-  def restoreValue(newValue: Float): Unit = updateValue(newValue)
+  def restoreValues(previous: Seq[Double]): Unit = {
+    updateValue(previous.last)
+    this.previousValues = previous
+  }
 
   def grow(): Unit = updateValue(value*(1+(maxGrowth*Math.random())))
 
@@ -44,6 +49,7 @@ class StockMarket(val name: String, val id: Int, maxGrowth: Float, maxDecay: Flo
   private def updateValue(newValue: Double): Unit = {
     val prev = value
     value = newValue max 0
+    writeIncrementalValue
     previousValues=previousValues++Seq(value)
     val eb = new EmbedBuilder().setTitle(s"$name prices ${if (prev < value) "increase" else "fall"}")
       .setColor(if (prev < value) Color.GREEN else Color.RED)
@@ -59,7 +65,7 @@ class StockMarket(val name: String, val id: Int, maxGrowth: Float, maxDecay: Flo
 
   private def shouldTriggerFun: Boolean = trigger(fun)
 
-  private def fun: Unit = {
+  private def fun(): Unit = {
     if (!shouldTriggerFun) return
     if (trigger(1-lean)) {
       skyrocket()
@@ -77,4 +83,11 @@ class StockMarket(val name: String, val id: Int, maxGrowth: Float, maxDecay: Flo
     ((iterMean+((Math.random()*iterOffset*2)-iterOffset))*1000).toLong
   }
 
+  def writeIncrementalValue(implicit sql: SQLConnection): Unit = {
+    sql.writeMarketValue(this)
+  }
+
+  override def write(): Unit = {
+
+  }
 }
