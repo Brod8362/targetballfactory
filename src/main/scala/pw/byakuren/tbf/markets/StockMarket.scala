@@ -34,7 +34,7 @@ class StockMarket(val name: String, val id: Int, maxGrowth: Float, maxDecay: Flo
   def setCallbackChannel(channel: TextChannel): Unit = stockChannel = Some(channel)
 
   def restoreValues(previous: Seq[Double]): Unit = {
-    updateValue(previous.last)
+    this.value =previous.last
     this.previousValues = previous
   }
 
